@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
@@ -27,6 +28,7 @@ import com.firebase.client.Firebase;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
+import java.util.Random;
 
 
 public class MainActivity extends Activity {
@@ -44,8 +46,7 @@ public class MainActivity extends Activity {
 
         listview = (ListView)findViewById(R.id.list_contact);
         contactModels = new ArrayList<ContactModel>();
-        new getContactTask().execute((Void[])null);
-        fireBaseUpdate();
+        new getContactTask().execute((Void[]) null);
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
@@ -55,6 +56,8 @@ public class MainActivity extends Activity {
                 final String number = contactModels.get(position).getPhone();
                 textContact(number, "Leaving now!");
                 Toast.makeText(MainActivity.this, "Sent", Toast.LENGTH_SHORT).show();
+                fireBaseUpdate();
+
             }
         });
 
@@ -65,6 +68,12 @@ public class MainActivity extends Activity {
     private void fireBaseUpdate(){
         Firebase ref = new Firebase("https://leaving-now.firebaseio.com/");
         Log.i("fb","done with fb");
+        SharedPreferences prefs = getSharedPreferences("com.example.homebase", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        Random r = new Random();
+        editor.putString("id", String.valueOf(r.nextInt(Integer.MAX_VALUE)+1));
+        editor.commit();
+        Log.i("i",prefs.getString("id", "null"));
 
         /*LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -75,6 +84,11 @@ public class MainActivity extends Activity {
         Firebase usersRef = ref.child("Users");
         usersRef.child("Ryan").child("Lat").setValue(String.valueOf(latitude));
         usersRef.child("Ryan").child("Long").setValue(String.valueOf(longitude));*/
+        Firebase usersRef = ref.child("Users");
+        usersRef.child(prefs.getString("id", "null")).child("Lat").setValue("10000");
+        usersRef.child(prefs.getString("id", "null")).child("Long").setValue("2000000");
+
+
 
 
     }
