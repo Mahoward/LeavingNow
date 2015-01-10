@@ -1,7 +1,13 @@
-#include <pebble.h>
-#inclue "mainmenu.h"
+#include "menu_window.h"
+#include "recent.h"
+#include "favorites.h"
+#include "contacts.h"
+  
+static SimpleMenuLayer *main_menu_layer;
+static SimpleMenuSection main_menu_sections[NUM_MM_SECTIONS];
+static GBitmap *menu_icon_image;
 
-static void main_window_load(Window *window) {
+void menu_window_load(Window *window){
   int curr_item = 0;
 
   main_menu[curr_item++] = (SimpleMenuItem){
@@ -21,7 +27,7 @@ static void main_window_load(Window *window) {
   };
 
   main_menu_sections[0] = (SimpleMenuSection){
-    .num_items = NUM_ITEMS,
+    .num_items = NUM_MM_ITEMS,
     .items = main_menu,
   };
   
@@ -34,7 +40,7 @@ static void main_window_load(Window *window) {
 }
 
 
-void main_window_unload(Window *window) {
+void menu_window_unload(Window *window) {
   simple_menu_layer_destroy(main_menu_layer);
 
   gbitmap_destroy(menu_icon_image);
