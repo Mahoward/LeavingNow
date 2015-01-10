@@ -1,41 +1,98 @@
 package com.example.team3.leavingnow;
 
-import android.support.v7.app.ActionBarActivity;
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.support.v7.app.ActionBarActivity;
+import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.provider.ContactsContract;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Locale;
 
 
 public class MainActivity extends ActionBarActivity {
+
+    ListView listview;
+    ArrayList<ContactModel> contactModels;
+    ArrayList<ContactModel> contactModelsSection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        listview = (ListView)findViewById(R.id.list_contact);
+        contactModels = new ArrayList<ContactModel>();
+        new getContactTask().execute((Void[])null);
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                String number = contactModels.get(position).getPhone();
+                textContact(number, "Leaving now!");
+                Log.i("test",number);
+            }
+        });
+
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    private class getContactTask extends AsyncTask<Void, Void, Void>
+    {
+        ProgressDialog progressDialog;
+        @Override
+        protected void onPreExecute() {
+            progressDialog = new ProgressDialog(MainActivity.this);
+            progressDialog.setIndeterminate(true);
+            progressDialog.show();
         }
 
-        return super.onOptionsItemSelected(item);
+        @SuppressLint("DefaultLocale")
+        @Override
+        protected Void doInBackground(Void... params) {
+            Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,null,null, null);
+            while (phones.moveToNext())
+            {
+                ContactModel contactModel = new ContactModel();
+                contactModel.setName(phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)).toUpperCase(Locale.ENGLISH));
+                contactModel.setPhone(phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
+                contactModels.add(contactModel);
+            }
+            phones.close();
+            Collections.sort(contactModels, new ContactModel());
+
+            Collections.sort(contactModels, new ContactModel());
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void result) {
+            progressDialog.dismiss();
+            listview.setAdapter(new ContactListAdapter(getApplicationContext(), contactModels));
+        }
+
     }
+
+    public void textContact(String phoneNum, String message){
+        int numLength = phoneNum.length();
+        //make sure that the phone number is larger than 7 digits
+        if(numLength > 7){
+            SmsManager sms = SmsManager.getDefault();
+            sms.sendTextMessage(phoneNum, null, message, null, null);
+        }
+    }
+
+
+
+
 }
