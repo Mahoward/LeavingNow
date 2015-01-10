@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.location.Location;
@@ -56,7 +57,7 @@ public class MainActivity extends Activity {
                 final String number = contactModels.get(position).getPhone();
                 textContact(number, "Leaving now!");
                 Toast.makeText(MainActivity.this, "Sent", Toast.LENGTH_SHORT).show();
-                fireBaseUpdate();
+                startService(new Intent(getBaseContext(), MapService.class));
 
             }
         });
@@ -65,33 +66,6 @@ public class MainActivity extends Activity {
 
     }
 
-    private void fireBaseUpdate(){
-        Firebase ref = new Firebase("https://leaving-now.firebaseio.com/");
-        Log.i("fb","done with fb");
-        SharedPreferences prefs = getSharedPreferences("com.example.homebase", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        Random r = new Random();
-        editor.putString("id", String.valueOf(r.nextInt(Integer.MAX_VALUE)+1));
-        editor.commit();
-        Log.i("i",prefs.getString("id", "null"));
-
-        /*LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        double longitude = location.getLongitude();
-        double latitude = location.getLatitude();
-        Log.i("location",String.valueOf(latitude));
-
-        Firebase usersRef = ref.child("Users");
-        usersRef.child("Ryan").child("Lat").setValue(String.valueOf(latitude));
-        usersRef.child("Ryan").child("Long").setValue(String.valueOf(longitude));*/
-        Firebase usersRef = ref.child("Users");
-        usersRef.child(prefs.getString("id", "null")).child("Lat").setValue("10000");
-        usersRef.child(prefs.getString("id", "null")).child("Long").setValue("2000000");
-
-
-
-
-    }
 
     private class getContactTask extends AsyncTask<Void, Void, Void>
     {
@@ -132,6 +106,11 @@ public class MainActivity extends Activity {
 
     public void textContact(String phoneNum, String message){
         int numLength = phoneNum.length();
+        SharedPreferences prefs = getSharedPreferences("com.example.homebase", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        Random r = new Random();
+        editor.putString("id", String.valueOf(r.nextInt(Integer.MAX_VALUE) + 1));
+        editor.commit();
         //make sure that the phone number is larger than 7 digits
         if(numLength > 7){
             SmsManager sms = SmsManager.getDefault();
