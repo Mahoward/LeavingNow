@@ -1,0 +1,19 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        ""
+    ],
+    "companyName": "Team 3",
+    "longName": "Leaving Now",
+    "projectType": "native",
+    "resources": {
+        "media": []
+    },
+    "shortName": "Leaving Now",
+    "uuid": "5b9a165e-d911-46fa-bbc9-6a8aa84a8faf",
+    "versionCode": 1,
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": false
+    }
+}
