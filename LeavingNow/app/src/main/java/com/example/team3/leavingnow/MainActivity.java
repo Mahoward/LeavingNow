@@ -1,8 +1,14 @@
 package com.example.team3.leavingnow;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -14,13 +20,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.firebase.client.Firebase;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
 
     ListView listview;
     ArrayList<ContactModel> contactModels;
@@ -28,21 +37,45 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Firebase.setAndroidContext(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         listview = (ListView)findViewById(R.id.list_contact);
         contactModels = new ArrayList<ContactModel>();
         new getContactTask().execute((Void[])null);
+        fireBaseUpdate();
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                String number = contactModels.get(position).getPhone();
+
+                String name = contactModels.get(position).getName();
+                final String number = contactModels.get(position).getPhone();
                 textContact(number, "Leaving now!");
-                Log.i("test",number);
+                Toast.makeText(MainActivity.this, "Sent", Toast.LENGTH_SHORT).show();
             }
         });
+
+
+
+    }
+
+    private void fireBaseUpdate(){
+        Firebase ref = new Firebase("https://leaving-now.firebaseio.com/");
+        Log.i("fb","done with fb");
+
+        /*LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        double longitude = location.getLongitude();
+        double latitude = location.getLatitude();
+        Log.i("location",String.valueOf(latitude));
+
+        Firebase usersRef = ref.child("Users");
+        usersRef.child("Ryan").child("Lat").setValue(String.valueOf(latitude));
+        usersRef.child("Ryan").child("Long").setValue(String.valueOf(longitude));*/
+
 
     }
 
