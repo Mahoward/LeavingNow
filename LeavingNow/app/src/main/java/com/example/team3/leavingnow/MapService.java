@@ -40,7 +40,8 @@ public class MapService extends Service {
     //Timer that will make the runnable run.
     Timer myTimer = new Timer();
 
-    CountDownTimer aCounter = new CountDownTimer(15000 , 1000) {
+    int minute = 60000;
+    CountDownTimer aCounter = new CountDownTimer(minute , 1000) {
         public void onTick(long millisUntilFinished) {
             Log.i("timer", "timer going");
             fireBaseUpdate();
@@ -73,23 +74,23 @@ public class MapService extends Service {
     public void onDestroy() {
         super.onDestroy();
         lm.removeUpdates(locationListener);
-
+        Log.i("timer", "Dying");
         Toast.makeText(this, "Leaving Now no longer running", Toast.LENGTH_LONG).show();
 
     }
 
     private void fireBaseUpdate(){
         //Adding code to have the cpu run when the phone goes to sleep
-        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Tag");
-        wl.acquire();
+        //PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        //PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Tag");
+        //wl.acquire();
         //////////////////////////////////////////////////////////////
         lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         locationListener = new MyLocationListener();
         lm.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
         /////////////////////////////////////////////////////////////
-        wl.release();
+        //wl.release();
         /////////////////////////////////////////////////////////////
     }
 

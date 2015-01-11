@@ -56,7 +56,7 @@ public class MainActivity extends Activity {
                 String name = contactModels.get(position).getName();
                 final String number = contactModels.get(position).getPhone();
                 SharedPreferences prefs = getSharedPreferences("com.example.homebase", Context.MODE_PRIVATE);
-                textContact(number, "Leaving now!\n"+"https://leaving-now.firebaseapp.com/?"+prefs.getString("id", "null"));
+                textContact(number, "Leaving now!\n"+"https://leaving-now.firebaseapp.com/?");//+prefs.getString("id", "null"));
                 Toast.makeText(MainActivity.this, "Sent", Toast.LENGTH_SHORT).show();
                 startService(new Intent(getBaseContext(), MapService.class));
 
@@ -112,8 +112,10 @@ public class MainActivity extends Activity {
         Random r = new Random();
         editor.putString("id", String.valueOf(r.nextInt(Integer.MAX_VALUE) + 1));
         editor.commit();
+        Log.i("randomNum", "The random number is:" + prefs.getString("id", "null"));
         //make sure that the phone number is larger than 7 digits
         if(numLength > 7){
+            message = message+prefs.getString("id", "null");
             SmsManager sms = SmsManager.getDefault();
             sms.sendTextMessage(phoneNum, null, message, null, null);
         }
