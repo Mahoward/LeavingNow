@@ -59,9 +59,9 @@ public class MainActivity extends Activity {
             @Override
             public void receiveData(final Context context, final int transactionId, final PebbleDictionary data) {
                 for(int i = 2; i <= 5; i++){
-                    if(data.getInteger(i) != null){
-                        Log.i(getLocalClassName(), "Received value=" + data.getInteger(i) + " for key: "+i);
+                    if(data.contains(i)){
                         pebbleData = i;
+                        break;
                     }
                 }
 
@@ -71,9 +71,9 @@ public class MainActivity extends Activity {
                     public void run() {
                         if(pebbleData != 1){
                             if(pebbleData != 5){
+                                pebbleSMS(data.getString(pebbleData));
                                 PebbleDictionary data = new PebbleDictionary();
-                                data.addUint8(0, (byte) 42);
-                                data.addString(KEY_DATA, "Hello from Android!");
+                                data.addString(KEY_DATA, "Sent!");
                                 toPebble(data);
                             }else{
                                 pebble_contacts.addInt32(DATA_TYPE, 0);
@@ -102,7 +102,6 @@ public class MainActivity extends Activity {
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-
                 String name = contactModels.get(position).getName();
                 final String number = contactModels.get(position).getPhone();
                 SharedPreferences prefs = getSharedPreferences("com.example.homebase", Context.MODE_PRIVATE);
@@ -117,11 +116,20 @@ public class MainActivity extends Activity {
 
     }
 
+    public void userSelected(int position){
+    }
+
+    public int pebbleSMS(String name){
+        int ni = contact_names.indexOf(name);
+        Log.i("pebbleSMS","Index of "+name+": "+ni );
+        return 0;
+    }
+
     public void populatePebbleContacts(){
-        pebble_contacts.addString(6, contact_names.get(13));
-        pebble_contacts.addString(7, contact_names.get(25));
-        pebble_contacts.addString(8, contact_names.get(44));
-        pebble_contacts.addString(9, contact_names.get(21));
+        pebble_contacts.addString(6, contact_names.get(81));
+        pebble_contacts.addString(7, contact_names.get(24));
+        pebble_contacts.addString(8, contact_names.get(187));
+        pebble_contacts.addString(9, contact_names.get(250));
 
         /*for(int i = 6; i < 11; i++){
             pebble_contacts.addString(i, contact_names.get(i-6));

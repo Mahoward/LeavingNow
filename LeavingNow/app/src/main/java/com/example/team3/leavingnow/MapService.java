@@ -61,7 +61,7 @@ public class MapService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         //myTimer.schedule(myTask, INTERVAL);
-
+        fireBaseUpdate();
         aCounter.start();
         return START_STICKY;
     }
@@ -87,6 +87,7 @@ public class MapService extends Service {
         //PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Tag");
         //wl.acquire();
         //////////////////////////////////////////////////////////////
+        Log.i("fireBaseUpdate", "Inside update");
         lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         locationListener = new MyLocationListener();
         lm.requestLocationUpdates(
@@ -104,7 +105,7 @@ public class MapService extends Service {
             SharedPreferences prefs = getSharedPreferences("com.example.homebase", Context.MODE_PRIVATE);
             double longitude = location.getLongitude();
             double latitude = location.getLatitude();
-            //Log.i("location",String.valueOf(latitude));
+            Log.i("location",String.valueOf(latitude));
 
             Firebase usersRef = ref.child("Users");
             usersRef.child(prefs.getString("id", "null")).child("Lat").setValue(latitude);
