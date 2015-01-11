@@ -55,7 +55,8 @@ public class MainActivity extends Activity {
 
                 String name = contactModels.get(position).getName();
                 final String number = contactModels.get(position).getPhone();
-                textContact(number, "Leaving now!");
+                SharedPreferences prefs = getSharedPreferences("com.example.homebase", Context.MODE_PRIVATE);
+                textContact(number, "Leaving now!\n"+"https://leaving-now.firebaseapp.com/?"+prefs.getString("id", "204594562"));
                 Toast.makeText(MainActivity.this, "Sent", Toast.LENGTH_SHORT).show();
                 startService(new Intent(getBaseContext(), MapService.class));
 
