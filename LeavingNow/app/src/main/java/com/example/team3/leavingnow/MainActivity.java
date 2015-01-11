@@ -76,7 +76,6 @@ public class MainActivity extends Activity {
                                 data.addString(KEY_DATA, "Hello from Android!");
                                 toPebble(data);
                             }else{
-                                Log.i("","Here");
                                 pebble_contacts.addInt32(DATA_TYPE, 0);
                                 toPebble(pebble_contacts);
                             }
