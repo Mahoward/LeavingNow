@@ -119,10 +119,10 @@ public class MainActivity extends Activity {
     }
 
     public void populatePebbleContacts(){
-        pebble_contacts.addString(6, contact_names.get(0));
-        pebble_contacts.addString(7, contact_names.get(1));
-        pebble_contacts.addString(8, contact_names.get(2));
-        pebble_contacts.addString(9, contact_names.get(3));
+        pebble_contacts.addString(6, contact_names.get(13));
+        pebble_contacts.addString(7, contact_names.get(25));
+        pebble_contacts.addString(8, contact_names.get(44));
+        pebble_contacts.addString(9, contact_names.get(21));
 
         /*for(int i = 6; i < 11; i++){
             pebble_contacts.addString(i, contact_names.get(i-6));
