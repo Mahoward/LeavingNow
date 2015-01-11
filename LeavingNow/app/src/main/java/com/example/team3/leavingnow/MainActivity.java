@@ -37,57 +37,18 @@ import static android.os.SystemClock.sleep;
 public class MainActivity extends Activity {
 
     ListView listview;
-    ArrayList<ContactModel> contactModels;
+    static ArrayList<ContactModel> contactModels;
     ArrayList<ContactModel> contactModelsSection;
-    PebbleDictionary pebble_contacts = new PebbleDictionary();
-    ArrayList<String> contact_names;
+    static PebbleDictionary pebble_contacts = new PebbleDictionary();
+    static ArrayList<String> contact_names;
 
     static boolean endTime;
-    static int pebbleData = -1;
-    static int KEY_DATA = 5;
-    static int DATA_TYPE = 1;
-
     private static final UUID TEST_UUID = UUID.fromString("2c4dbeaf-d3d1-46af-9588-112f1745c9f2");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Firebase.setAndroidContext(this);
-
-        final Handler handler = new Handler();
-        PebbleKit.registerReceivedDataHandler(this, new PebbleKit.PebbleDataReceiver(TEST_UUID) {
-
-            @Override
-            public void receiveData(final Context context, final int transactionId, final PebbleDictionary data) {
-                for(int i = 2; i <= 5; i++){
-                    if(data.contains(i)){
-                        pebbleData = i;
-                        break;
-                    }
-                }
-
-                handler.post(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        if(pebbleData != 1){
-                            if(pebbleData != 5){
-                                pebbleSMS(data.getString(pebbleData));
-                                PebbleDictionary data = new PebbleDictionary();
-                                data.addString(KEY_DATA, "Sent!");
-                                toPebble(data);
-                            }else{
-                                pebble_contacts.addInt32(DATA_TYPE, 0);
-                                toPebble(pebble_contacts);
-                            }
-                        }
-                    }
-
-                });
-                PebbleKit.sendAckToPebble(getApplicationContext(), transactionId);
-            }
-
-        });
-
         PebbleKit.startAppOnPebble(getApplicationContext(), TEST_UUID);
 
 
@@ -119,46 +80,13 @@ public class MainActivity extends Activity {
     public void userSelected(int position){
     }
 
-    public int pebbleSMS(String name){
-        int ni = contact_names.indexOf(name);
-        Log.i("pebbleSMS","Index of "+name+": "+ni );
-        return 0;
-    }
 
     public void populatePebbleContacts(){
         pebble_contacts.addString(6, contact_names.get(81));
         pebble_contacts.addString(7, contact_names.get(24));
         pebble_contacts.addString(8, contact_names.get(187));
         pebble_contacts.addString(9, contact_names.get(250));
-
-        /*for(int i = 6; i < 11; i++){
-            pebble_contacts.addString(i, contact_names.get(i-6));
-        }*/
     }
-
-    public void toPebble(PebbleDictionary data) {
-        // Send the assembled dictionary to the watchapp;
-        PebbleKit.sendDataToPebble(getApplicationContext(), TEST_UUID, data);
-
-        PebbleKit.registerReceivedAckHandler(getApplicationContext(), new PebbleKit.PebbleAckReceiver(TEST_UUID) {
-
-            @Override
-            public void receiveAck(Context context, int transactionId) {
-                Log.i(getLocalClassName(), "Received ack for transaction " + transactionId);
-            }
-
-        });
-
-        PebbleKit.registerReceivedNackHandler(getApplicationContext(), new PebbleKit.PebbleNackReceiver(TEST_UUID) {
-
-            @Override
-            public void receiveNack(Context context, int transactionId) {
-                Log.i(getLocalClassName(), "Received nack for transaction " + transactionId);
-            }
-
-        });
-    }
-
 
     private class getContactTask extends AsyncTask<Void, Void, Void>
     {
@@ -208,7 +136,7 @@ public class MainActivity extends Activity {
         return prefs;
     }
 
-    public void textContact(String phoneNum, String message){
+    public static void textContact(String phoneNum, String message){
         int numLength = phoneNum.length();
         Log.i("randomNum", "The random number is:" + message);
         //make sure that the phone number is larger than 7 digits

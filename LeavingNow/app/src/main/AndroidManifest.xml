@@ -29,6 +29,12 @@
             android:exported="true" >
         </service>
 
+        <receiver android:name="com.example.team3.leavingnow.Receiver" >
+            <intent-filter>
+                <action android:name="com.getpebble.action.app.RECEIVE" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".favoritesActivity"
             android:label="@string/title_activity_favorites" >
