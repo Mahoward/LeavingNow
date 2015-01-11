@@ -85,7 +85,7 @@ public class MainActivity extends Activity {
         pebble_contacts.addString(6, contact_names.get(81));
         pebble_contacts.addString(7, contact_names.get(24));
         pebble_contacts.addString(8, contact_names.get(187));
-        pebble_contacts.addString(9, contact_names.get(250));
+        //pebble_contacts.addString(9, contact_names.get(250));
     }
 
     private class getContactTask extends AsyncTask<Void, Void, Void>
