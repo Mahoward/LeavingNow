@@ -11,6 +11,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -66,6 +67,7 @@ public class MapService extends Service {
     public IBinder onBind(Intent intent) {
         return mBinder;
     }
+
     /** Called when The service is no longer used and is being destroyed */
     @Override
     public void onDestroy() {
@@ -77,14 +79,18 @@ public class MapService extends Service {
     }
 
     private void fireBaseUpdate(){
-
-
-
+        //Adding code to have the cpu run when the phone goes to sleep
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Tag");
+        wl.acquire();
+        //////////////////////////////////////////////////////////////
         lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         locationListener = new MyLocationListener();
         lm.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
-
+        /////////////////////////////////////////////////////////////
+        wl.release();
+        /////////////////////////////////////////////////////////////
     }
 
     private class MyLocationListener implements LocationListener {
