@@ -28,7 +28,7 @@ public class MapService extends Service {
     LocationListener locationListener;
     //the amount of time after which you want to stop the service
     private final long INTERVAL = 5000; // I choose 5 seconds
-
+    /*
     TimerTask myTask = new TimerTask()
     {
         public void run()
@@ -37,13 +37,14 @@ public class MapService extends Service {
             stopSelf();
         }
     };
+    */
     //Timer that will make the runnable run.
     Timer myTimer = new Timer();
 
     int minute = 60000;
     CountDownTimer aCounter = new CountDownTimer(minute , 1000) {
         public void onTick(long millisUntilFinished) {
-            Log.i("timer", "timer going");
+            Log.i("timer", "tick");
             fireBaseUpdate();
         }
         public void onFinish() {
@@ -102,7 +103,7 @@ public class MapService extends Service {
             SharedPreferences prefs = getSharedPreferences("com.example.homebase", Context.MODE_PRIVATE);
             double longitude = location.getLongitude();
             double latitude = location.getLatitude();
-            Log.i("location",String.valueOf(latitude));
+            //Log.i("location",String.valueOf(latitude));
 
             Firebase usersRef = ref.child("Users");
             usersRef.child(prefs.getString("id", "null")).child("Lat").setValue(latitude);

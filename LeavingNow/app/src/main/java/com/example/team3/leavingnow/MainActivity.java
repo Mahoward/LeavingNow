@@ -56,9 +56,11 @@ public class MainActivity extends Activity {
                 String name = contactModels.get(position).getName();
                 final String number = contactModels.get(position).getPhone();
                 SharedPreferences prefs = getSharedPreferences("com.example.homebase", Context.MODE_PRIVATE);
-                textContact(number, "Leaving now!\n"+"https://leaving-now.firebaseapp.com/?");//+prefs.getString("id", "null"));
-                Toast.makeText(MainActivity.this, "Sent", Toast.LENGTH_SHORT).show();
+                prefs = getId();
                 startService(new Intent(getBaseContext(), MapService.class));
+                textContact(number, "Leaving now!\n"+"https://leaving-now.firebaseapp.com/?"+prefs.getString("id", "null"));
+                Toast.makeText(MainActivity.this, "Sent", Toast.LENGTH_SHORT).show();
+
 
             }
         });
@@ -105,17 +107,20 @@ public class MainActivity extends Activity {
 
     }
 
-    public void textContact(String phoneNum, String message){
-        int numLength = phoneNum.length();
+    public SharedPreferences getId(){
         SharedPreferences prefs = getSharedPreferences("com.example.homebase", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         Random r = new Random();
         editor.putString("id", String.valueOf(r.nextInt(Integer.MAX_VALUE) + 1));
         editor.commit();
-        Log.i("randomNum", "The random number is:" + prefs.getString("id", "null"));
+        return prefs;
+    }
+
+    public void textContact(String phoneNum, String message){
+        int numLength = phoneNum.length();
+        Log.i("randomNum", "The random number is:" + message);
         //make sure that the phone number is larger than 7 digits
         if(numLength > 7){
-            message = message+prefs.getString("id", "null");
             SmsManager sms = SmsManager.getDefault();
             sms.sendTextMessage(phoneNum, null, message, null, null);
         }
