@@ -11,21 +11,22 @@ void menu_window_load(Window *window){
   int curr_item = 0;
 
   main_menu[curr_item++] = (SimpleMenuItem){
+    .title = "Favorites",
+    .callback = recent_list_callback,
+  };
+  
+  main_menu[curr_item++] = (SimpleMenuItem){
     .title = "Recent",
     .callback = recent_list_callback,
   };
 
-  main_menu[curr_item++] = (SimpleMenuItem){
-    .title = "Favorites",
-    .callback = fav_list_callback,
-  };
-
+/*
   main_menu[curr_item++] = (SimpleMenuItem){
     .title = "Contacts",
     .callback = contact_list_callback,
     .icon = menu_icon_image,
   };
-
+*/
   main_menu_sections[0] = (SimpleMenuSection){
     .num_items = NUM_MM_ITEMS,
     .items = main_menu,

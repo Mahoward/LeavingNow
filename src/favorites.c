@@ -2,16 +2,24 @@
 
 #define NUM_F_SECTIONS 1
 #define NUM_F_ITEMS 3
-
+#define F_KEY 3
+  
 static SimpleMenuItem fav_menu[NUM_F_ITEMS];
 static SimpleMenuLayer *fav_menu_layer;
 static Window *fav_window;
 static SimpleMenuSection fav_menu_sections[NUM_F_SECTIONS];
 static GBitmap *fav_icon_image;
 
-static void generic_callback(int index, void *ctx) {
+static void send_fav_callback(int index, void *ctx) {
   fav_menu[index].subtitle = "Selected";
   layer_mark_dirty(simple_menu_layer_get_layer(fav_menu_layer));
+  
+  DictionaryIterator *iter;
+  Tuplet test_tuple =  TupletInteger(F_KEY, index);
+  app_message_outbox_begin(&iter);
+  dict_write_tuplet(iter, &test_tuple);
+  dict_write_end(iter);
+  app_message_outbox_send();
 }
 
 void fav_window_load(Window *window){
@@ -19,17 +27,17 @@ void fav_window_load(Window *window){
 
   fav_menu[curr_item++] = (SimpleMenuItem){
     .title = "F_Ryan",
-    .callback = generic_callback,
+    .callback = send_fav_callback,
   };
 
   fav_menu[curr_item++] = (SimpleMenuItem){
     .title = "F_Fedor",
-    .callback = generic_callback,
+    .callback = send_fav_callback,
   };
 
   fav_menu[curr_item++] = (SimpleMenuItem){
     .title = "F_Mike",
-    .callback = generic_callback,
+    .callback = send_fav_callback,
     .icon = fav_icon_image,
   };
 
