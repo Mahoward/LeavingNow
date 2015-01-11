@@ -13,6 +13,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.telephony.SmsManager;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
@@ -38,13 +40,15 @@ public class MainActivity extends Activity {
     ArrayList<ContactModel> contactModels;
     ArrayList<ContactModel> contactModelsSection;
 
+    static Boolean endTime;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Firebase.setAndroidContext(this);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        endTime = false;
         listview = (ListView)findViewById(R.id.list_contact);
         contactModels = new ArrayList<ContactModel>();
         new getContactTask().execute((Void[]) null);
@@ -60,8 +64,6 @@ public class MainActivity extends Activity {
                 startService(new Intent(getBaseContext(), MapService.class));
                 textContact(number, "Leaving now!\n"+"https://leaving-now.firebaseapp.com/?"+prefs.getString("id", "null"));
                 Toast.makeText(MainActivity.this, "Sent", Toast.LENGTH_SHORT).show();
-
-
             }
         });
 

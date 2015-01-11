@@ -42,7 +42,7 @@ public class MapService extends Service {
     Timer myTimer = new Timer();
 
     int minute = 60000;
-    CountDownTimer aCounter = new CountDownTimer(minute , 1000) {
+    CountDownTimer aCounter = new CountDownTimer(minute , 5000) {
         public void onTick(long millisUntilFinished) {
             Log.i("timer", "tick");
             fireBaseUpdate();
@@ -61,6 +61,7 @@ public class MapService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         //myTimer.schedule(myTask, INTERVAL);
+
         aCounter.start();
         return START_STICKY;
     }
