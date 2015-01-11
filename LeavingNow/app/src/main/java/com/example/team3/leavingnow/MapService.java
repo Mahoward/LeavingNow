@@ -41,7 +41,7 @@ public class MapService extends Service {
     //Timer that will make the runnable run.
     Timer myTimer = new Timer();
 
-    int minute = 60000;
+    int minute = 300000;
     CountDownTimer aCounter = new CountDownTimer(minute , 5000) {
         public void onTick(long millisUntilFinished) {
             Log.i("timer", "tick");
