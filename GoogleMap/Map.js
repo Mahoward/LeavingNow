@@ -13,14 +13,14 @@ var url;
 
 
 function initialize() {
-	
+
 	ref.child('Long').once('value', function(dataSnapshot) {
 		Longitude=parseFloat(dataSnapshot.val());
 		ref.child('Lat').once('value', function(dataSnapshot) {
 			Latitude=parseFloat(dataSnapshot.val());
 			    var myLatlng = new google.maps.LatLng(Latitude,Longitude);
   			    var mapOptions = {
-   	 		    	zoom: 11,
+   	 		    	zoom: 18,
     		    	center: myLatlng
   				}
   			map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
@@ -55,7 +55,3 @@ function moveMarker( map, marker ) {
      //   marker.setPosition( new google.maps.LatLng( 0, 0 ) );
       //  map.panTo( new google.maps.LatLng( 0, 0 ) );
 };
-
-
-
-
