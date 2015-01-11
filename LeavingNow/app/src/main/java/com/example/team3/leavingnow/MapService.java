@@ -101,6 +101,7 @@ public class MapService extends Service {
 
         @Override
         public void onLocationChanged(Location location) {
+            Firebase.setAndroidContext(getBaseContext());
             Firebase ref = new Firebase("https://leaving-now.firebaseio.com/");
             SharedPreferences prefs = getSharedPreferences("com.example.homebase", Context.MODE_PRIVATE);
             double longitude = location.getLongitude();
