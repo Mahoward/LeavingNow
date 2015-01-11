@@ -23,9 +23,7 @@
         android:background="#FFFFFF"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/imageView"
-        android:dividerHeight="5px"
-        android:layout_alignParentEnd="false" />
+        android:layout_below="@+id/imageView" />
 
 
 </RelativeLayout>
